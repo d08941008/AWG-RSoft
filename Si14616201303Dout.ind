@@ -1,0 +1,1153 @@
+Nguide_file = naf.dat
+pade_order_warning_3d = 0
+wa_solve = PADE_DIRECT
+wa_solve_warning = 0
+eim = 0
+linewidth = 0.15
+height2 = 0.15
+RLots = 20.2       # from InAllShallow
+RLotss = 19.12			# for linewidth
+Litss = 1.305			# for linewidth
+Lots = RLots-Ro
+Lotss = RLotss-Ro
+Ai = (Di/Ri)*(180/pi)
+Ao = (Do/Ro)*(180/pi)
+Asa = (M+2*Md+1)/2
+Aso = (Nout+2*Nd+1)/2
+CAi = sinc(Ai/2)
+CAo = sinc(Ao/2)
+DL = GratingOrder*Lambda0/Nguide_design
+DLambda = 0.02
+Design_background_index = nreal($background_material,Lambda0)
+Design_cover_index = nreal($cover_material,Lambda0)
+Design_delta = Design_slab_index-Design_background_index
+Design_height = height
+Design_pol = polarization
+Design_slab_height = slab_height
+Design_slab_index = nreal($slab_material,Lambda0)
+Design_width = width
+# Di = 3*W
+Di = 1.9
+DispersionCorrection = 1
+DispersionFactor = if(DispersionCorrection,Ngroup_design/Nguide_design,1)
+# Do = 3*W
+Do = 1.9
+Dz = 0
+Fwd = gt(S,0)
+GratingOrder = max(1,round(Lambda0/(Nchan*DLambda*DispersionFactor)))
+# GratingOrder = max(1,Lambda0/(Nchan*DLambda*DispersionFactor))
+HasNGF = defined("Nguide_file")
+Hside = Design_slab_height
+InStar = not(Fwd)
+Lambda0 = 1.3
+Li = 2*Lit
+Lic = Ri*(1-cos(Ai/2))
+Lim = max(Ro/100,Lic)
+Lit = (Nslab_design/Lambda0)*(Wit^2)
+Litm = Lit
+Lo = 2*Lot
+Loc = Ro*(1-cos(Ao/2))
+Lom = max(Ro/100,Loc)
+# Lot = (Nslab_design/Lambda0)*(Wot^2)
+Lot = 6.67002
+Lotm = Lot
+Lsep = Ri+Dz
+Lstar = (Ri+Ro)-(Sagi+Sago)-Lsep
+M = 16
+Md = 0
+NC = Design_cover_index
+NF = Design_background_index+Design_delta
+NS = Design_background_index
+Nchan = 6
+Nd = 0
+Ngroup2D = slabneff(Design_pol,0,Lambda0,NS,NS,NF,Design_width,1)
+Ngroup3D = eimneff(Design_pol,0,0,Lambda0,NC,NS,NF,Design_width,Design_height,Hside,1)
+NgroupNGF = NguideNGF-Lambda0*userderiv($Nguide_file:"",Lambda0)
+Ngroup_design = if(HasNGF,NgroupNGF,if(is2D,Ngroup2D,Ngroup3D))
+Nguide2D = slabneff(Design_pol,0,Lambda0,NS,NS,NF,Design_width)
+Nguide3D = eimneff(Design_pol,0,0,Lambda0,NC,NS,NF,Design_width,Design_height,Hside)
+NguideNGF = userdata($Nguide_file:"",Lambda0)
+Nguide_design = if(HasNGF,NguideNGF,if(is2D,Nguide2D,Nguide3D))
+Nin = 1
+Nout = 4
+Nslab2D = NF
+Nslab3D = slabneff(Design_pol,0,Lambda0,NC,NS,NF,Design_height)
+Nslab_design = if(is2D,Nslab2D,Nslab3D)
+Ri = Ro/2
+Ro = (Nslab_design/GratingOrder)*((Di*Do)/(DLambda*DispersionFactor))
+S = 1
+Sagi = Ri-sqrt(Ri^2-(Wstar/2)^2)
+Sago = Ro-sqrt(Ro^2-(Wstar/2)^2)
+W = width
+Wim = W+(Wit-W)*(Lit+Lim)/(Lit+Lic)
+Wit = 2*W
+Wom = W+(Wot-W)*(Lot+Lom)/(Lot+Loc)
+Wot = Do*CAo
+Wstar = min(WstarMax,(M+2*Md+4)*Do)
+WstarMax = if(ge(Ro,Ri*sqrt(2)),2*Ri,2*Ro*sqrt(1-(0.5*Ro/Ri)^2))
+Zlens = Lsep+(Sagi-Ri)+Lstar/2
+alpha = 0
+background_alpha = nimag($background_material)
+background_index = nreal($background_material)
+background_material = SiO2
+cad_aspectratio_x = 1
+cad_aspectratio_y = 1
+char_delta = Design_delta
+char_height = Design_height
+char_width = Design_width
+cover_alpha = nimag($cover_material)
+cover_index = nreal($cover_material)
+cover_material = SiO2
+default_material = Si
+delta = 0
+dimension = 3
+domain_delta = width
+domain_max = if(Fwd,-domain_min_F,domain_max_F)
+domain_max_F = ((Ro+Lo)-domain_delta)
+domain_min = if(Fwd,-domain_max_F,domain_min_F)
+domain_min_F = ((-Li)+domain_delta)
+domain_round_sym = 1
+
+free_space_wavelength = Lambda0
+grid_size = 0.025
+grid_size_y = 0.02
+height = 0.22
+import_list = @Si14616201303Dimport.txt
+import_symbol_file = Si14616201303Din.ind
+import_symbol_file_auto = 1
+is2D = eq(dimension,2)
+is2Deff = or(is2D,eim)
+k0 = (2*pi)/free_space_wavelength
+launch_align_file = InStar
+launch_file = input.fld
+launch_tilt = InStar
+launch_type = LAUNCH_FILE
+modelist_output = InStar
+monitor_file = mode.m00
+monitor_output = not(InStar)
+monitor_step_size = 5*step_size
+monitor_type = if(is2Deff,MONITOR_WGMODE_POWER,MONITOR_FILE_POWER)
+p0_file_in = power.dat
+p0_file_out = power.out
+pade_order = 1
+pathway_overlap_warning = 0
+polarization = 0
+sim_tool = ST_BEAMPROP
+slab_alpha = nimag($slab_material)
+slab_height = 0
+slab_index = nreal($slab_material)
+slab_material = Si
+slice_display_mode = DISPLAY_CONTOURMAPXZ
+slice_output_format = OUTPUT_NONE
+step_size = 0.125
+structure = STRUCT_RIBRIDGE
+vector = 0
+width = 0.5
+width_taper_in = TAPER_LINEAR
+width_taper_out = TAPER_LINEAR
+zAa1 = (1-Asa)*Ao
+zAa10 = (10-Asa)*Ao
+zAa11 = (11-Asa)*Ao
+zAa12 = (12-Asa)*Ao
+zAa13 = (13-Asa)*Ao
+zAa14 = (14-Asa)*Ao
+zAa15 = (15-Asa)*Ao
+zAa16 = (16-Asa)*Ao
+zAa2 = (2-Asa)*Ao
+zAa3 = (3-Asa)*Ao
+zAa4 = (4-Asa)*Ao
+zAa5 = (5-Asa)*Ao
+zAa6 = (6-Asa)*Ao
+zAa7 = (7-Asa)*Ao
+zAa8 = (8-Asa)*Ao
+zAa9 = (9-Asa)*Ao
+zAo1 = 180-(1-Aso)*Ai
+zAo2 = 180-(2-Aso)*Ai
+zAo3 = 180-(3-Aso)*Ai
+zAo4 = 180-(4-Aso)*Ai
+
+
+material 1
+	name = Air
+	optical
+		nr = 1
+	end optical
+end material
+
+material 2
+	name = SiO2
+	optical
+		ni = userimag("<rsoftmat>\SiO2_nk.dat",free_space_wavelength)
+		nr = userreal("<rsoftmat>\SiO2_nk.dat",free_space_wavelength)
+	end optical
+end material
+
+material 3
+	name = Si
+	optical
+		ni = userimag("<rsoftmat>\Si_nk.dat",free_space_wavelength)
+		nr = userreal("<rsoftmat>\Si_nk.dat",free_space_wavelength)
+	end optical
+end material
+
+
+lens 1
+	draw_priority = 1
+	rfront = if(Fwd,Ro,Ri)
+	rback = -if(Fwd,Ri,Ro)
+	tcenter = Lstar
+	begin.x = Zlens*sin(0) rel begin segment 2
+	begin.z = -S*Zlens*cos(0) rel begin segment 2
+	begin.width = Wstar
+end lens
+
+segment 2
+	profile_type = PROF_INACTIVE
+	draw_priority = 2
+	orientation = 1
+	begin.x = 0
+	begin.z = 0
+	end.x = Lsep*sin(0) rel begin segment 2
+	end.z = -S*(Lsep*cos(0)) rel begin segment 2
+	# end.z = -S*(Ro) rel begin segment 2
+end segment
+
+segment 3
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo1) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo1) rel end segment 2
+   begin.width = Wim
+   end.x = (Ri+Lit)*sin(zAo1) rel end segment 2
+   end.z = -S*(Ri+Lit)*cos(zAo1) rel end segment 2
+end segment
+
+segment 4
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri+Litm)*sin(zAo1) rel end segment 2
+   begin.z = -S*(Ri+Litm)*cos(zAo1) rel end segment 2
+   end.x = -S*(zAo1) deg rel begin segment 4
+   end.z = S*(Ri+Li) rel end segment 2
+end segment
+
+segment 5
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo2) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo2) rel end segment 2
+   begin.width = Wim
+   end.x = (Ri+Lit)*sin(zAo2) rel end segment 2
+   end.z = -S*(Ri+Lit)*cos(zAo2) rel end segment 2
+end segment
+
+segment 6
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri+Litm)*sin(zAo2) rel end segment 2
+   begin.z = -S*(Ri+Litm)*cos(zAo2) rel end segment 2
+   end.x = -S*(zAo2) deg rel begin segment 6
+   end.z = S*(Ri+Li) rel end segment 2
+end segment
+
+segment 7
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo3) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo3) rel end segment 2
+   begin.width = Wim
+   end.x = (Ri+Lit)*sin(zAo3) rel end segment 2
+   end.z = -S*(Ri+Lit)*cos(zAo3) rel end segment 2
+end segment
+
+segment 8
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri+Litm)*sin(zAo3) rel end segment 2
+   begin.z = -S*(Ri+Litm)*cos(zAo3) rel end segment 2
+   end.x = -S*(zAo3) deg rel begin segment 8
+   end.z = S*(Ri+Li) rel end segment 2
+end segment
+
+segment 9
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo4) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo4) rel end segment 2
+   begin.width = Wim
+   end.x = (Ri+Lit)*sin(zAo4) rel end segment 2
+   end.z = -S*(Ri+Lit)*cos(zAo4) rel end segment 2
+end segment
+
+segment 10
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri+Litm)*sin(zAo4) rel end segment 2
+   begin.z = -S*(Ri+Litm)*cos(zAo4) rel end segment 2
+   end.x = -S*(zAo4) deg rel begin segment 10
+   end.z = S*(Ri+Li) rel end segment 2
+end segment
+
+segment 11
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa1) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa1) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa1) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa1) rel begin segment 2
+end segment
+
+segment 12
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa1) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa1) rel begin segment 2
+   end.x = -S*zAa1 deg rel begin segment 12
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 13
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa2) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa2) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa2) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa2) rel begin segment 2
+end segment
+
+segment 14
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa2) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa2) rel begin segment 2
+   end.x = -S*zAa2 deg rel begin segment 14
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 15
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa3) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa3) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa3) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa3) rel begin segment 2
+end segment
+
+segment 16
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa3) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa3) rel begin segment 2
+   end.x = -S*zAa3 deg rel begin segment 16
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 17
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa4) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa4) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa4) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa4) rel begin segment 2
+end segment
+
+segment 18
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa4) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa4) rel begin segment 2
+   end.x = -S*zAa4 deg rel begin segment 18
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 19
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa5) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa5) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa5) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa5) rel begin segment 2
+end segment
+
+segment 20
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa5) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa5) rel begin segment 2
+   end.x = -S*zAa5 deg rel begin segment 20
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 21
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa6) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa6) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa6) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa6) rel begin segment 2
+end segment
+
+segment 22
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa6) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa6) rel begin segment 2
+   end.x = -S*zAa6 deg rel begin segment 22
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 23
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa7) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa7) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa7) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa7) rel begin segment 2
+end segment
+
+segment 24
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa7) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa7) rel begin segment 2
+   end.x = -S*zAa7 deg rel begin segment 24
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 25
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa8) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa8) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa8) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa8) rel begin segment 2
+end segment
+
+segment 26
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa8) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa8) rel begin segment 2
+   end.x = -S*zAa8 deg rel begin segment 26
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 27
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa9) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa9) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa9) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa9) rel begin segment 2
+end segment
+
+segment 28
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa9) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa9) rel begin segment 2
+   end.x = -S*zAa9 deg rel begin segment 28
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 29
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa10) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa10) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa10) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa10) rel begin segment 2
+end segment
+
+segment 30
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa10) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa10) rel begin segment 2
+   end.x = -S*zAa10 deg rel begin segment 30
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 31
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa11) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa11) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa11) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa11) rel begin segment 2
+end segment
+
+segment 32
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa11) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa11) rel begin segment 2
+   end.x = -S*zAa11 deg rel begin segment 32
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 33
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa12) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa12) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa12) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa12) rel begin segment 2
+end segment
+
+segment 34
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa12) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa12) rel begin segment 2
+   end.x = -S*zAa12 deg rel begin segment 34
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 35
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa13) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa13) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa13) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa13) rel begin segment 2
+end segment
+
+segment 36
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa13) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa13) rel begin segment 2
+   end.x = -S*zAa13 deg rel begin segment 36
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 37
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa14) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa14) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa14) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa14) rel begin segment 2
+end segment
+
+segment 38
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa14) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa14) rel begin segment 2
+   end.x = -S*zAa14 deg rel begin segment 38
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 39
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa15) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa15) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa15) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa15) rel begin segment 2
+end segment
+
+segment 40
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa15) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa15) rel begin segment 2
+   end.x = -S*zAa15 deg rel begin segment 40
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 41
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa16) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa16) rel begin segment 2
+   begin.width = Wom
+   end.x = (Ro+Lot)*sin(zAa16) rel begin segment 2
+   end.z = -S*(Ro+Lot)*cos(zAa16) rel begin segment 2
+end segment
+
+segment 42
+   draw_priority = 0
+   mask_layer = 0
+   color = 12
+   orientation = 1
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro+Lotm)*sin(zAa16) rel begin segment 2
+   begin.z = -S*(Ro+Lotm)*cos(zAa16) rel begin segment 2
+   end.x = -S*zAa16 deg rel begin segment 42
+   end.z = -S*(Ro+Lo) rel begin segment 2
+end segment
+
+segment 43
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa1) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa1) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa1) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa1) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 44
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa2) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa2) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa2) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa2) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 45
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa3) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa3) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa3) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa3) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 46
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa4) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa4) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa4) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa4) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 47
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa5) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa5) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa5) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa5) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 48
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa6) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa6) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa6) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa6) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 49
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa7) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa7) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa7) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa7) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 50
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa8) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa8) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa8) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa8) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 51
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa9) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa9) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa9) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa9) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 52
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa10) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa10) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa10) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa10) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 53
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa11) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa11) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa11) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa11) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 54
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa12) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa12) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa12) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa12) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 55
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa13) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa13) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa13) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa13) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 56
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa14) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa14) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa14) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa14) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 57
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa15) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa15) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa15) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa15) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 58
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_out
+   position_taper = TAPER_LINEAR
+   begin.x = (Ro-Lom)*sin(zAa16) rel begin segment 2
+   begin.z = -S*(Ro-Lom)*cos(zAa16) rel begin segment 2
+   begin.width = Wom*2
+   begin.height = height2
+   end.x = (RLots)*sin(zAa16) rel begin segment 2
+   end.z = -S*(RLots)*cos(zAa16) rel begin segment 2
+   end.height = height2
+end segment
+
+segment 59
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   position_taper = TAPER_ARC
+   begin.x = (Ro+Lotss/2)*sin(zAa16) rel begin segment 2
+   begin.z = -S*(Ro+Lotss/2)*cos(zAa16) rel begin segment 2
+   begin.width = Lotss
+   begin.height = height2
+   end.width = Lotss
+   arc_type = ARC_FREE
+   arc_radius = Ro+Lotss/2
+   arc_iangle = -90-zAa16
+   arc_fangle = -90-zAa1
+   end.height = height2
+end segment
+
+segment 60
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo1) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo1) rel end segment 2
+   begin.width = Wim*2
+   begin.height = height2
+   end.x = (Ri+Lots)*sin(zAo1) rel end segment 2
+   end.z = -S*(Ri+Lots)*cos(zAo1) rel end segment 2
+   end.height = height2
+end segment
+
+segment 61
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo2) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo2) rel end segment 2
+   begin.width = Wim*2
+   begin.height = height2
+   end.x = (Ri+Lots)*sin(zAo2) rel end segment 2
+   end.z = -S*(Ri+Lots)*cos(zAo2) rel end segment 2
+   end.height = height2
+end segment
+
+segment 62
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo3) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo3) rel end segment 2
+   begin.width = Wim*2
+   begin.height = height2
+   end.x = (Ri+Lots)*sin(zAo3) rel end segment 2
+   end.z = -S*(Ri+Lots)*cos(zAo3) rel end segment 2
+   end.height = height2
+end segment
+
+segment 63
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   width_taper = width_taper_in
+   position_taper = TAPER_LINEAR
+   begin.x = (Ri-Lim)*sin(zAo4) rel end segment 2
+   begin.z = -S*(Ri-Lim)*cos(zAo4) rel end segment 2
+   begin.width = Wim*2
+   begin.height = height2
+   end.x = (Ri+Lots)*sin(zAo4) rel end segment 2
+   end.z = -S*(Ri+Lots)*cos(zAo4) rel end segment 2
+   end.height = height2
+end segment
+
+segment 64
+   draw_priority = -1
+   mask_layer = 0
+   color = 14
+   orientation = 1
+   position_taper = TAPER_ARC
+   begin.x = (Ri+Litss/2)*sin(zAo4) rel end segment 2
+   begin.z = -S*(Ri+Litss/2)*cos(zAo4) rel end segment 2
+   begin.width = Litss
+   begin.height = height2
+   end.width = Litss
+   arc_type = ARC_FREE
+   arc_radius = Ri+Litss/2
+   arc_iangle = -90-(zAo4-180)
+   arc_fangle = -90-(zAo1-180)
+   end.height = height2
+end segment
+
+segment 65
+	profile_type = PROF_INACTIVE
+	draw_priority = 2
+	orientation = 1
+	begin.x = 0
+	begin.z = 0
+	end.x = Lsep*sin(0) rel begin segment 2
+	# end.z = -S*(Lsep*cos(0)) rel begin segment 2
+	end.z = -S*(Ro) rel begin segment 2
+end segment
+
+
+pathway 1
+	3
+	4
+end pathway
+
+pathway 2
+	5
+	6
+end pathway
+
+pathway 3
+	7
+	8
+end pathway
+
+pathway 4
+	9
+	10
+end pathway
+
+
+monitor 1
+	pathway = 1
+	monitor_type = monitor_type
+	monitor_tilt = 1
+	monitor_file = $monitor_file
+end monitor
+
+monitor 2
+	pathway = 2
+	monitor_type = monitor_type
+	monitor_tilt = 1
+	monitor_file = $monitor_file
+end monitor
+
+monitor 3
+	pathway = 3
+	monitor_type = monitor_type
+	monitor_tilt = 1
+	monitor_file = $monitor_file
+end monitor
+
+monitor 4
+	pathway = 4
+	monitor_type = monitor_type
+	monitor_tilt = 1
+	monitor_file = $monitor_file
+end monitor
+
+
+

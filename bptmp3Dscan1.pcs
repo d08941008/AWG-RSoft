@@ -1,0 +1,16 @@
+/tt"$IBeamPROP$N Simulation of AWG WDM Router (Input Port \#1)"
+/xl"Wavelength (nm)"
+/yl"Transmission (dB)"
+/l/lh"Output Port:"
+/lts0.6
+/ls1
+/lcm9,10,12,11,13,1,2,4
+/logy
+/sy10
+/sx1000
+/w,,,0
+bptmp3Dscan1.dat
+/lt"\#1"
+/lt"\#2"
+/lt"\#3"
+/lt"\#4"
